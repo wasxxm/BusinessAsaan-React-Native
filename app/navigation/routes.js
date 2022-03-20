@@ -3,9 +3,11 @@ export default Object.freeze({
   ORDER_DETAILS: "OrderDetails",
   ORDER_EDIT: "OrderEdit",
 
-  LISTING_DETAILS: "ListingDetails",
-  LISTING_EDIT: "ListingEdit",
+  SALE_DETAILS: "SaleDetails",
+  SALE_EDIT: "SaleEdit",
+
   LOGIN: "Login",
+  FEEDS: "Feeds",
   MESSAGES: "Messages",
   REGISTER: "Register",
 });

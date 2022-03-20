@@ -3,9 +3,11 @@ import Constants from "expo-constants";
 const settings = {
   dev: {
     apiUrl: "https://asaan.business/api",
+    // apiUrl: "http://127.0.0.1:8000/api",
   },
   staging: {
     apiUrl: "https://asaan.business/api",
+    // apiUrl: "http://127.0.0.1:8000/api",
   },
   prod: {
     apiUrl: "https://asaan.business/api",

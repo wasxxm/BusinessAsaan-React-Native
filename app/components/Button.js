@@ -3,13 +3,13 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import colors from "../config/colors";
 
-function AppButton({ title, onPress, color = "primary" }) {
+function AppButton({ title, onPress, color = "primary", size = "normal", style }) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors[color] }]}
+      style={[styles.button, size === 'normal' ?  styles.normalSizeBtn : styles.smallSizeBtn, { backgroundColor: colors[color] }, style]}
       onPress={onPress}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, size === 'normal' ?  styles.normalSizeText : styles.smallSizeText, style]}>{title}</Text>
     </TouchableOpacity>
   );
 }
@@ -17,18 +17,31 @@ function AppButton({ title, onPress, color = "primary" }) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
-    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    padding: 15,
     width: "100%",
     marginVertical: 10,
   },
   text: {
     color: colors.white,
-    fontSize: 18,
     textTransform: "uppercase",
+  },
+  normalSizeBtn: {
+    padding: 15,
+    borderRadius: 8,
+  },
+  normalSizeText: {
+    fontSize: 18,
     fontWeight: "bold",
+  },
+  smallSizeBtn: {
+    padding: 8,
+    borderRadius: 5,
+  },
+  smallSizeText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    paddingHorizontal: 5,
   },
 });
 

@@ -14,6 +14,9 @@ export default {
   },
   heading: {
     fontSize: 20,
-    marginBottom: 12,
+  },
+  subHeading: {
+    fontSize: 16,
+    color: colors.medium,
   }
 };
