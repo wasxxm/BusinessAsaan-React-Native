@@ -4,6 +4,7 @@ const endpoint = "/invoices";
 
 const getInvoices = (params) => client.get(endpoint, params);
 const getInvoice = (params) => client.get(endpoint + '/' + params.id, params);
+const exportInvoice = (params) => client.get(endpoint + '/' + params.id + '/print?export=' + params.export, params);
 
 export const addInvoice = (invoice, onUploadProgress) => {
     const data = new FormData();
@@ -31,4 +32,5 @@ export default {
     addInvoice,
     getInvoice,
     getInvoices,
+    exportInvoice,
 };

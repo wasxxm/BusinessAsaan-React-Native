@@ -4,11 +4,11 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 import AccountNavigator from "./AccountNavigator";
 import FeedNavigator from "./FeedNavigator";
-import ListingEditScreen from "../screens/ListingEditScreen";
 import NewListingButton from "./NewListingButton";
 import routes from "./routes";
 import useNotifications from "../hooks/useNotifications";
 import {StyleSheet} from "react-native";
+import SaleAddNavigator from "./SaleAddNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,12 +34,12 @@ const AppNavigator = () => {
                 }}
             />
             <Tab.Screen
-                name="OrdersEdit"
-                component={ListingEditScreen}
+                name="SaleAdd"
+                component={SaleAddNavigator}
                 options={({navigation}) => ({
                     tabBarButton: () => (
                         <NewListingButton
-                            onPress={() => navigation.navigate(routes.LISTING_EDIT)}
+                            onPress={() => navigation.navigate(routes.SALE_ADD)}
                         />
                     ),
                     tabBarIcon: ({color, size}) => (
@@ -65,14 +65,13 @@ const AppNavigator = () => {
 };
 
 const styles = StyleSheet.create({
-    tabBarStyle: {
-    },
+    tabBarStyle: {},
     tabBarItemStyle: {
         paddingBottom: 4,
         paddingTop: 4,
     },
     tabBarLabelStyle: {
-      fontSize: 13,
+        fontSize: 13,
     },
 });
 

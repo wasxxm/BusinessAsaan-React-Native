@@ -18,7 +18,7 @@ const FeedNavigator = () => (
             marginRight: 20,
         }
     }}>
-        <Stack.Screen name={routes.FEEDS} component={FeedsScreen}/>
+        <Stack.Screen name={routes.FEEDS} component={FeedsScreen} options={{headerShown: false}}/>
         <Stack.Screen name={routes.SALE_DETAILS} component={SaleDetailsScreen}/>
     </Stack.Navigator>
 );

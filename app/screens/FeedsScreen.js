@@ -22,7 +22,7 @@ function FeedsScreen({navigation}) {
     return (
         <>
             <ActivityIndicator visible={getInvoicesApi.loading}/>
-            <Screen>
+            <Screen style={{marginTop: 10}}>
                 <View style={styles.headingWrapper}>
                     <View style={styles.headingRow}>
                         <AppText style={[{flex: 1}, defaultStyles.heading]}>Recent Sales</AppText>
