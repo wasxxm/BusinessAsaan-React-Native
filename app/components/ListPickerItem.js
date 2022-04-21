@@ -10,26 +10,27 @@ function ListPickerItem({ item, onPress }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
-        <Icon
+        {item.icon && <Icon
           backgroundColor={item.backgroundColor}
           name={item.icon}
           size={80}
-        />
+        />}
+        <Text style={styles.label}>{item.label}</Text>
       </TouchableOpacity>
-      <Text style={styles.label}>{item.label}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     alignItems: "center",
-    width: "33%",
+    margin: 5,
+    width: "100%",
+    backgroundColor: colors.white,
   },
   label: {
-    marginTop: 5,
     textAlign: "center",
   },
 });

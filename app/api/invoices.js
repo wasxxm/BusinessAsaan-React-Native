@@ -19,9 +19,6 @@ export const addInvoice = (invoice, onUploadProgress) => {
         })
     );
 
-    if (invoice.location)
-        data.append("location", JSON.stringify(invoice.location));
-
     return client.post(endpoint, data, {
         onUploadProgress: (progress) =>
             onUploadProgress(progress.loaded / progress.total),

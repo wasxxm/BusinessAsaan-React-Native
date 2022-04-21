@@ -9,11 +9,11 @@ import {
 import * as FileSystem from 'expo-file-system';
 import {Table, Row} from 'react-native-table-component';
 import * as MediaLibrary from 'expo-media-library';
-import * as Permissions from 'expo-permissions';
 import * as IntentLauncher from "expo-intent-launcher";
 
 
 import ActivityIndicator from "../../components/ActivityIndicator";
+import authStorage from "../../auth/storage";
 import Button from "../../components/Button";
 import colors from "../../config/colors";
 import defaultStyles from "../../config/styles";
@@ -29,62 +29,63 @@ function SaleDetailsScreen({route, navigation}) {
     const sale = route.params;
 
     const getInvoiceApi = useApi(invoicesApi.getInvoice);
-    const exportInvoiceApi = useApi(invoicesApi.exportInvoice);
 
     const [printDisabled, setPrintDisabled] = useState(true);
 
     const print = async () => {
         setPrintDisabled(true);
-        /*        exportInvoiceApi.request({id: sale.id, export: 'pdf'}).then(() => {
-                    setPrintDisabled(false);
-                    // console.log(exportInvoiceApi);
-                })*/
         const headers = {
-            'Content-Type': 'application/pdf',
-            'Authorization': 'Bearer 46|1ZPokccTruoDr3NY9bOjFv0PiHqlDR78PzbpvN8U'
-        }
-        const response = await axios.get(settings.apiUrl + '/invoices/' + sale.id + '/print?export=pdf', {responseType: 'blob', headers: headers});
-
-        const perm = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-        if (perm.status !== 'granted') {
-            return;
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Authorization': 'Bearer ' + await authStorage.getToken()
         }
 
-        const fr = new FileReader();
-        fr.onload = async () => {
-            const fileUri = `${FileSystem.documentDirectory}${sale.invoice_no}-invoice.pdf`;
-            await FileSystem.writeAsStringAsync(fileUri, fr.result.split(',')[1], {encoding: FileSystem.EncodingType.Base64});
+      await axios.get(settings.apiUrl + '/invoices/' + sale.id + '/print?export=pdf', {
+            responseType: 'blob',
+            headers: headers
+        }).then(async (res) => {
+            const permission = await MediaLibrary.requestPermissionsAsync();
 
-            try {
-                const asset = await MediaLibrary.createAssetAsync(fileUri);
-                const album = await MediaLibrary.getAlbumAsync('Downloads');
-                if (album == null) {
-                    await MediaLibrary.createAlbumAsync('Downloads', asset, false);
-                } else {
-                    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-                }
-                FileSystem.getContentUriAsync(fileUri).then(cUri => {
-                    IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-                        data: cUri.uri,
-                        flags: 1,
-                        type: 'application/pdf',
-                    });
-                });
-            } catch (e) {
-                // console.log(e);
+            if (!permission.granted) {
+                return;
             }
 
-            setPrintDisabled(false);
+            const fr = new FileReader();
+            fr.readAsDataURL(res.data);
+            fr.onload = async () => {
+                // console.log(fr.result);
+                const fileUri = `${FileSystem.documentDirectory}${sale.invoice_no}-invoice.pdf`;
+                await FileSystem.writeAsStringAsync(fileUri, fr.result.split(',')[1], {encoding: FileSystem.EncodingType.Base64});
 
-        };
-        fr.readAsDataURL(response.data);
+                try {
+                    const asset = await MediaLibrary.createAssetAsync(fileUri);
+                    const album = await MediaLibrary.getAlbumAsync('Downloads');
+                    if (album == null) {
+                        await MediaLibrary.createAlbumAsync('Downloads', asset, false);
+                    } else {
+                        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+                    }
+                    FileSystem.getContentUriAsync(fileUri).then(cUri => {
+                        IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+                            data: cUri,
+                            flags: 1 | 2,
+                            type: 'application/pdf',
+                        });
+                    });
+                } catch (e) {
+                    // console.log(e);
+                }
+
+                setPrintDisabled(false);
+
+            };
+        });
     }
 
     useEffect(() => {
         navigation.setOptions({
             title: sale.invoice_no,
             headerRight: () => {
-                return <Button disabled={printDisabled} title="Print" size="small"
+                return <Button disabled={printDisabled} title="Export as PDF" size="small"
                                style={{width: "auto", marginRight: 0}}
                                btnStyle={{textTransform: 'none'}} onPress={() => print()}/>
             }
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     head: {height: 40, backgroundColor: colors.white},
-    headText: {fontWeight: "bold", color: colors.medium,textAlign: 'center'},
+    headText: {fontWeight: "bold", color: colors.medium, textAlign: 'center'},
     wrapper: {flexDirection: 'row'},
     tableTitle: {flex: 1, backgroundColor: '#2ecc71'},
     row: {height: 28},
